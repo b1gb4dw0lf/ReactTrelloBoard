@@ -1,0 +1,26 @@
+@import '../../Base';
+
+.board {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.board-dialogue {
+  display: inline-flex;
+  flex-direction: column;
+  background-color: rgba(0,0,0,.12);
+  margin: 5px;
+  border-radius: 4px;
+  width: 250px;
+  padding: 10px 10px 8px 8px;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,.7);
+  transition: background 85ms ease-in,opacity 40ms ease-in,border-color 85ms ease-in;
+}
+
+.board-dialogue:hover{
+  cursor: pointer;
+  background: rgba(0,0,0,.3);
+  transition: background 85ms ease-in,opacity 40ms ease-in,border-color 85ms ease-in;
+}
