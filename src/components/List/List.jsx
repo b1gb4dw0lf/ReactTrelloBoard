@@ -29,7 +29,7 @@ class List extends React.Component {
         return (
             <div className="list">
                 {this.getHeader()}
-                {this.state.children}
+                {this.state.children.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
@@ -40,7 +40,9 @@ class List extends React.Component {
     getHeader() {
         if (this.state.title && !this.state.isEditing) {
             return (<div className="header" onDoubleClick={this.handleDoubleClick} >
-                <div className="title">{this.state.title}</div>
+                <div className="title">
+                    <span>{this.state.title}</span>
+                </div>
                 <div className="list-dialogue" >
                     <a onClick={this.handleSelfDelete}>delete</a>
                 </div>
@@ -60,7 +62,7 @@ class List extends React.Component {
     handleKeyDown(event) {
         if (event.keyCode == 13) { // Pressed Enter
             if (!this.state.editText && this.state.children.length == 0)
-                this.handleSelfDelete(this.props.id);
+                this.handleSelfDelete();
             else if (!this.state.editText) {
                 return this.setState({isEditing: false});
             }
@@ -72,7 +74,7 @@ class List extends React.Component {
                 this.setState({isEditing: false});
             }
             else { // If ESC is pressed and there is no text
-                this.handleSelfDelete(this.props.id);
+                this.handleSelfDelete();
             }
         }
     }
@@ -88,18 +90,14 @@ class List extends React.Component {
 
     handleAddItem () {
         let id = this.guid();
-        this.setState({
-            children: this.state.children.concat(
-                <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>
-            )
-        });
+        let children = this.state.children.slice();
+        children.push(id);
+        this.setState({children: children});
     }
 
     handleDeleteItem(id) {
         let children = this.state.children.slice();
-        let index = _.findIndex(children, (child) => {
-            return child.props.id == id;
-        });
+        let index = _.findIndex(children, (child) => child == id);
         children.splice(index, 1);
         this.setState({children: children});
     }

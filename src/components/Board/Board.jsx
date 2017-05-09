@@ -21,7 +21,7 @@ class Board extends React.Component {
     render() {
         return (
             <div className="board">
-                {this.state.lists}
+                {this.state.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
                 <div className="board-dialogue" onClick={this.handleAddList}>
                         Add list
                 </div>
@@ -31,13 +31,13 @@ class Board extends React.Component {
 
     handleAddList() {
         let id = this.guid();
-        this.setState({lists: this.state.lists.concat(<List key={id} id={id} deleteList={this.handleDeleteList} />)});
+        let lists = this.state.lists.slice();
+        lists.push(id);
+        this.setState({lists: lists});
     }
 
     handleDeleteList(id) {
-        let index = _.findIndex(this.state.lists, (list) => {
-            return list.props.id == id;
-        });
+        let index = _.findIndex(this.state.lists, (list) =>  list == id);
         let lists = this.state.lists.slice();
         lists.splice(index, 1);
         this.setState({lists: lists});
