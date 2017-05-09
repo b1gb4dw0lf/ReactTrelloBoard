@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 import './Board.less';
 
@@ -14,6 +15,7 @@ class Board extends React.Component {
         };
 
         this.handleAddList = this.handleAddList.bind(this);
+        this.handleDeleteList = this.handleDeleteList.bind(this);
     }
 
     render() {
@@ -29,7 +31,16 @@ class Board extends React.Component {
 
     handleAddList() {
         let id = this.guid();
-        this.setState({lists: this.state.lists.concat(<List key={id} id={id} />)});
+        this.setState({lists: this.state.lists.concat(<List key={id} id={id} deleteList={this.handleDeleteList} />)});
+    }
+
+    handleDeleteList(id) {
+        let index = _.findIndex(this.state.lists, (list) => {
+            return list.props.id == id;
+        });
+        let lists = this.state.lists.slice();
+        lists.splice(index, 1);
+        this.setState({lists: lists});
     }
 
     /**
