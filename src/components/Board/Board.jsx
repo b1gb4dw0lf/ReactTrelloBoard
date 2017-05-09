@@ -23,7 +23,7 @@ class Board extends React.Component {
             <div className="board">
                 {this.state.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
                 <div className="board-dialogue" onClick={this.handleAddList}>
-                        Add list
+                    Add list
                 </div>
             </div>
         );
