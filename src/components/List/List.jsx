@@ -12,8 +12,14 @@ class List extends React.Component {
 
         this.handleAddItem = this.handleAddItem.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleTitleInput = this.handleTitleInput.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
 
         this.state = {
+            title: '',
+            isEditing: false,
+            editText: '',
             children: []
         };
     }
@@ -21,13 +27,42 @@ class List extends React.Component {
     render () {
         return (
             <div className="list">
-                <div className="header">List Title</div>
+                {this.getHeader()}
                 {this.state.children}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
             </div>
         );
+    }
+
+    getHeader() {
+        if (this.state.title && !this.state.isEditing) {
+            return <div className="header" onDoubleClick={this.handleDoubleClick} >{this.state.title}</div>
+        } else {
+            return <input autoFocus="true" className="list-title" onChange={this.handleTitleInput} onKeyDown={this.handleKeyDown} value={this.state.editText} />
+        }
+    }
+
+    handleDoubleClick(event) {
+        this.setState({
+            editText: this.state.title,
+            isEditing: true
+        });
+    }
+
+    handleKeyDown(event) {
+        if (event.keyCode == 13) { // Pressed Enter
+            this.setState({title: this.state.editText, isEditing: false});
+        }
+    }
+
+    handleSelfDelete(id) {
+        this.props.deleteList(id);
+    }
+
+    handleTitleInput(event) {
+        this.setState({editText: event.target.value});
     }
 
     handleAddItem () {
