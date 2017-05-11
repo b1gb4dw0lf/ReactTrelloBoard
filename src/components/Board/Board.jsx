@@ -1,9 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import propTypes from 'prop-types';
 
 import './Board.less';
 
-import List from '../List/List.jsx';
+import List from '../ListContainer/ListContainer.jsx';
 
 class Board extends React.Component {
 
@@ -59,4 +62,4 @@ class Board extends React.Component {
     }
 }
 
-export default Board;
+export default DragDropContext(HTML5Backend)(Board);

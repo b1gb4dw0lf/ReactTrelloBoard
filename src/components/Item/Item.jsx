@@ -1,6 +1,22 @@
 import React from 'react';
+import propTypes from 'prop-types';
+import ItemTypes from '../DraggableTypes/DraggableTypes.jsx';
+import { DragSource } from 'react-dnd';
 
-import './Item.less'
+import './Item.less';
+
+const itemSource = {
+    beginDrag(props) {
+        return {id: props.id};
+    }
+};
+
+function collect(connect, monitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    }
+}
 
 class Item extends React.Component {
     constructor(props) {
@@ -19,14 +35,16 @@ class Item extends React.Component {
     }
 
     render() {
+        const {connectDragSource, isDragging} = this.props;
         if (this.state.description && !this.state.isEditing) {
-            return (<div className="item" onDoubleClick={this.handleEnableEdit}>
-                <div className="dialogue">
-                    <span>{(new Date()).toDateString()}</span>
-                    <a onClick={this.handleDelete}>delete</a>
-                </div>
-                <label>{this.state.description}</label>
-            </div>);
+            return connectDragSource(
+                <div className="item" style={{cursor: 'move'}} onDoubleClick={this.handleEnableEdit}>
+                    <div className="dialogue">
+                        <span>{(new Date()).toDateString()}</span>
+                        <a onClick={this.handleDelete}>delete</a>
+                    </div>
+                    <label>{this.state.description}</label>
+                </div>);
         } else {
             return <textarea autoFocus="true" id="item-edit-input" className="edit-input" type="text" onChange={this.handleDescription} onKeyDown={this.handleKeyDown} value={this.state.editText}/>;
         }
@@ -62,4 +80,11 @@ class Item extends React.Component {
     }
 }
 
-export default Item;
+Item.propTypes = {
+    id: propTypes.string.isRequired,
+    deleteItem: propTypes.func.isRequired,
+    connectDragSource: propTypes.func.isRequired,
+    isDragging: propTypes.bool.isRequired
+};
+
+export default DragSource(ItemTypes.ITEM, itemSource, collect)(Item);
