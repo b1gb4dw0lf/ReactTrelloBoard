@@ -1,28 +1,32 @@
 @import '../../Base';
 
 .list {
-  display: inline-flex;
   flex-direction: column;
   background-color: #E2E4E6;
-  margin: 5px;
   border-radius: 4px;
   width: 270px;
 
   .header{
     margin: 0;
-    padding: 6px 10px 6px 8px;
+    padding: 9.5px 10px 8px 8px;
     min-height: 16px;
     font-size: 14px;
     font-weight: 600;
     color: #4d4d4d;
 
     .title{
-      float: left;
+      position: relative;
+      width: 85%;
     }
 
     .list-dialogue{
-      float: right;
+      position: relative;
+      right: 0;
       font-weight: 400;
+    }
+
+    .title, .list-dialogue{
+      display: inline-block;
     }
   }
 
@@ -46,11 +50,12 @@
 
 .list-title{
   margin: 0;
-  padding: 10px 10px 7px 8px;
+  padding: 9.5px 10px 7.5px 10px;
   min-height: 18px;
   font-size: 14px;
   font-weight: 700;
   color: #4d4d4d;
   border-radius: 4px 4px 0 0;
   border: 0;
+  width: ~"calc(100% - 20px)";
 }

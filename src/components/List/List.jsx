@@ -1,9 +1,25 @@
 import React from 'react';
 import _ from 'lodash';
+import propTypes from 'prop-types';
+import ItemTypes from '../DraggableTypes/DraggableTypes.jsx';
+import { DropTarget } from 'react-dnd'
 
 import './List.less';
 
 import Item from '../Item/Item.jsx';
+
+const listTarget = {
+    drop(props, monitor) {
+        console.log(props.id);
+    }
+};
+
+function collect(connect, monitor) {
+    return {
+        connectDropTarget: connect.dropTarget(),
+        isOver: monitor.isOver()
+    };
+}
 
 class List extends React.Component {
 
@@ -26,7 +42,8 @@ class List extends React.Component {
     }
 
     render () {
-        return (
+        const {connectDropTarget, isOver} = this.props
+        return connectDropTarget(
             <div className="list">
                 {this.getHeader()}
                 {this.state.children.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
@@ -48,7 +65,9 @@ class List extends React.Component {
                 </div>
             </div>)
         } else {
-            return <input autoFocus="true" className="list-title" onChange={this.handleTitleInput} onKeyDown={this.handleKeyDown} value={this.state.editText} />
+            return (<div>
+                <input autoFocus="true" className="list-title" onChange={this.handleTitleInput} onKeyDown={this.handleKeyDown} value={this.state.editText} />
+            </div>);
         }
     }
 
@@ -118,4 +137,9 @@ class List extends React.Component {
     }
 }
 
-export default List;
+List.propTypes = {
+    id: propTypes.string,
+    deleteList: propTypes.func
+};
+
+export default DropTarget(ItemTypes.ITEM, listTarget, collect)(List);
