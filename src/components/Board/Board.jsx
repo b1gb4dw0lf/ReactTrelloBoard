@@ -13,18 +13,18 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-          lists: []
-        };
-
         this.handleAddList = this.handleAddList.bind(this);
         this.handleDeleteList = this.handleDeleteList.bind(this);
+    }
+
+    componentDidMount() {
+        console.log(this.props);
     }
 
     render() {
         return (
             <div className="board">
-                {this.state.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
+                {this.props.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
                 <div className="board-dialogue" onClick={this.handleAddList}>
                     Add list
                 </div>
@@ -34,9 +34,8 @@ class Board extends React.Component {
 
     handleAddList() {
         let id = this.guid();
-        let lists = this.state.lists.slice();
-        lists.push(id);
-        this.setState({lists: lists});
+        this.props.addList(id);
+        console.log(this.props);
     }
 
     handleDeleteList(id) {
