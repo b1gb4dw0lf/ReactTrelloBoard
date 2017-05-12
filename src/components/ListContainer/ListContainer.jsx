@@ -14,15 +14,14 @@ const listSource = {
 
 function collect(connect, monitor) {
     return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
+        connectDragSource: connect.dragSource()
     }
 }
 
 class ListContainer extends  React.Component{
 
     render() {
-        const {connectDragSource, isDragging} = this.props;
+        const {connectDragSource} = this.props;
         return connectDragSource(<div className="list-container">
             <List key={this.props.id} id={this.props.id} deleteList={this.props.deleteList}/>
         </div>);
