@@ -9,11 +9,11 @@ export default {
             item: itemId
         };
     },
-    addItem: (listId, item) => {
+    addItem: (listId, itemId) => {
         return {
             type: ActionTypes.ADD_ITEM,
             list: listId,
-            item: item
+            item: itemId
         };
     },
     deleteItem: (listId, itemId) => {
