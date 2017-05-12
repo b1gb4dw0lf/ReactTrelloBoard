@@ -19,5 +19,12 @@ export default {
             type: ActionTypes.DELETE_LIST,
             id: id
         };
+    },
+    editList: (id, title) => {
+        return {
+            type: ActionTypes.EDIT_LIST,
+            id: id,
+            title: title
+        }
     }
 }

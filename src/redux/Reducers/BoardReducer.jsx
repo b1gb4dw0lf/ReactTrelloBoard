@@ -49,6 +49,18 @@ const reducer = (state = {}, action) => {
             swapState.lists = lists;
             return swapState;
 
+        case 'editItem':
+            listIndex = findListIndex(swapState.lists, action.list);
+            itemIndex = findItemIndex(swapState.lists[listIndex].items, action.item);
+            lists = swapState.lists.slice();
+            list = Object.assign({}, lists[listIndex]);
+            items = list.items.slice();
+            let item = Object.assign({}, items[itemIndex]);
+            item.description = action.description;
+            items[itemIndex] = item;
+            list.items = items;
+            lists[listIndex] = list;
+            swapState.lists = lists;
             return swapState;
 
         case 'addList':
@@ -64,6 +76,13 @@ const reducer = (state = {}, action) => {
             swapState.lists = lists;
             return swapState;
 
+        case 'editList':
+            listIndex = findListIndex(swapState.lists, action.id);
+            lists = swapState.lists.slice();
+            list = Object.assign({}, lists[listIndex]);
+            list.title = action.title;
+            lists[listIndex] = list;
+            swapState.lists = lists;
             return swapState;
 
         default:

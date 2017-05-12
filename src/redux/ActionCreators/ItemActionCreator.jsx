@@ -22,5 +22,13 @@ export default {
             list: listId,
             item: itemId
         };
+    },
+    editItem: (listId, itemId, description) => {
+        return {
+            type: ActionTypes.EDIT_ITEM,
+            list: listId,
+            item: itemId,
+            description: description
+        }
     }
 }
