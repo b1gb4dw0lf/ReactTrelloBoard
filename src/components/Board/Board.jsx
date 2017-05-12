@@ -6,7 +6,7 @@ import propTypes from 'prop-types';
 
 import './Board.less';
 
-import List from '../ListContainer/ListContainer.jsx';
+import List from '../DraggableList/DraggableList.jsx';
 
 class Board extends React.Component {
 
@@ -17,14 +17,10 @@ class Board extends React.Component {
         this.handleDeleteList = this.handleDeleteList.bind(this);
     }
 
-    componentDidMount() {
-        console.log(this.props);
-    }
-
     render() {
         return (
             <div className="board">
-                {this.props.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
+                {this.props.lists.map((obj) => (<List key={obj.id} id={obj.id} items={obj.items} deleteList={this.handleDeleteList}/>))}
                 <div className="board-dialogue" onClick={this.handleAddList}>
                     Add list
                 </div>
@@ -35,14 +31,10 @@ class Board extends React.Component {
     handleAddList() {
         let id = this.guid();
         this.props.addList(id);
-        console.log(this.props);
     }
 
     handleDeleteList(id) {
-        let index = _.findIndex(this.state.lists, (list) =>  list == id);
-        let lists = this.state.lists.slice();
-        lists.splice(index, 1);
-        this.setState({lists: lists});
+        this.props.deleteList(id);
     }
 
     /**

@@ -4,7 +4,6 @@ import ListActions from '../../redux/ActionCreators/ListActionCreator.jsx';
 import Board from './Board.jsx';
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         lists: state.lists
     }

@@ -1,10 +1,10 @@
 import React from 'react';
-
-import List from '../List/List.jsx';
+import { connect } from 'react-redux'
+import List from '../List/ListContainer.jsx';
 import ItemTypes from '../DraggableTypes/DraggableTypes.jsx';
 import { DragSource } from 'react-dnd';
 
-import './ListContainer.less';
+import './DraggableList.less';
 
 const listSource = {
     beginDrag(props) {
@@ -18,14 +18,18 @@ function collect(connect, monitor) {
     }
 }
 
-class ListContainer extends  React.Component{
+class DraggableList extends  React.Component{
+
+    componentDidMount() {
+        console.log(this.props);
+    }
 
     render() {
         const {connectDragSource} = this.props;
         return connectDragSource(<div className="list-container">
-            <List key={this.props.id} id={this.props.id} deleteList={this.props.deleteList}/>
+            <List key={this.props.id} id={this.props.id} items={this.props.items} deleteList={this.props.deleteList}/>
         </div>);
     }
 }
 
-export default DragSource(ItemTypes.LIST, listSource, collect)(ListContainer);
+export default DragSource(ItemTypes.LIST, listSource, collect)(DraggableList);

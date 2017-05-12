@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import propTypes from 'prop-types';
 import ItemTypes from '../DraggableTypes/DraggableTypes.jsx';
 import { DropTarget } from 'react-dnd'
@@ -16,8 +15,7 @@ const listTarget = {
 
 function collect(connect, monitor) {
     return {
-        connectDropTarget: connect.dropTarget(),
-        isOver: monitor.isOver()
+        connectDropTarget: connect.dropTarget()
     };
 }
 
@@ -36,17 +34,16 @@ class List extends React.Component {
         this.state = {
             title: '',
             isEditing: false,
-            editText: '',
-            children: []
+            editText: ''
         };
     }
 
     render () {
-        const {connectDropTarget, isOver} = this.props
+        const {connectDropTarget} = this.props;
         return connectDropTarget(
             <div className="list">
                 {this.getHeader()}
-                {this.state.children.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
+                {this.props.items.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
@@ -98,9 +95,9 @@ class List extends React.Component {
         }
     }
 
-    handleSelfDelete(id) {
-        if (this.state.children.length == 0)
-            this.props.deleteList(id);
+    handleSelfDelete() {
+        if (this.props.items.length == 0)
+            this.props.deleteList(this.props.id);
     }
 
     handleTitleInput(event) {
@@ -109,16 +106,12 @@ class List extends React.Component {
 
     handleAddItem () {
         let id = this.guid();
-        let children = this.state.children.slice();
-        children.push(id);
-        this.setState({children: children});
+        this.props.addItem(this.props.id, id);
+        console.log(this.props.items);
     }
 
     handleDeleteItem(id) {
-        let children = this.state.children.slice();
-        let index = _.findIndex(children, (child) => child == id);
-        children.splice(index, 1);
-        this.setState({children: children});
+        this.props.deleteItem(this.props.id, id);
     }
 
     /**
@@ -138,8 +131,10 @@ class List extends React.Component {
 }
 
 List.propTypes = {
-    id: propTypes.string,
-    deleteList: propTypes.func
+    id: propTypes.string.isRequired,
+    deleteList: propTypes.func.isRequired,
+    addItem: propTypes.func.isRequired,
+    deleteItem: propTypes.func.isRequired
 };
 
 export default DropTarget(ItemTypes.ITEM, listTarget, collect)(List);
