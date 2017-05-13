@@ -27,6 +27,7 @@ class List extends React.Component {
 
         this.handleAddItem = this.handleAddItem.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.handleEditItem = this.handleEditItem.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleTitleInput = this.handleTitleInput.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
@@ -44,8 +45,10 @@ class List extends React.Component {
         return connectDropTarget(
             <div className="list">
                 {this.getHeader()}
-                {console.log(this.props.items)}
-                {this.props.items.map((obj) => <Item key={obj.id} id={obj.id} description={obj.description} deleteItem={this.handleDeleteItem}/>)}
+                {this.props.items.map((obj) => (<Item key={obj.id} id={obj.id}
+                                                      description={obj.description}
+                                                      deleteItem={this.handleDeleteItem}
+                                                      editItem={this.handleEditItem} />))}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
@@ -114,6 +117,10 @@ class List extends React.Component {
 
     handleDeleteItem(id) {
         this.props.deleteItem(this.props.id, id);
+    }
+
+    handleEditItem(id, description) {
+        this.props.editItem(this.props.id, id, description);
     }
 
     /**

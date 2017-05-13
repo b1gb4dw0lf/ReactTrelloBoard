@@ -13,8 +13,7 @@ const itemSource = {
 
 function collect(connect, monitor) {
     return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
+        connectDragSource: connect.dragSource()
     }
 }
 
@@ -35,15 +34,15 @@ class Item extends React.Component {
     }
 
     render() {
-        const {connectDragSource, isDragging} = this.props;
-        if (this.state.description && !this.state.isEditing) {
+        const {connectDragSource} = this.props;
+        if (this.props.description && !this.state.isEditing) {
             return connectDragSource(
                 <div className="item" style={{cursor: 'move'}} onDoubleClick={this.handleEnableEdit}>
                     <div className="dialogue">
                         <span>{(new Date()).toDateString()}</span>
                         <a onClick={this.handleDelete}>delete</a>
                     </div>
-                    <label>{this.state.description}</label>
+                    <label>{this.props.description}</label>
                 </div>);
         } else {
             return <textarea autoFocus="true" id="item-edit-input" className="edit-input" type="text" onChange={this.handleDescription} onKeyDown={this.handleKeyDown} value={this.state.editText}/>;
@@ -56,10 +55,11 @@ class Item extends React.Component {
 
     handleKeyDown(event) {
         if (event.keyCode == 13) { // Pressed Enter
-            this.setState({description: this.state.editText, isEditing: false});
+            this.props.editItem(this.props.id, this.state.editText);
+            this.setState({isEditing: false});
         } else if (event.keyCode == 27) {
             //If ESC is pressed and there is already a text
-            if (this.state.description) {
+            if (this.props.description) {
                 this.setState({isEditing: false});
             }
             else { // If ESC is pressed and there is no text
@@ -74,7 +74,7 @@ class Item extends React.Component {
 
     handleEnableEdit() {
         this.setState({
-            editText: this.state.description,
+            editText: this.props.description,
             isEditing: true
         });
     }
@@ -83,8 +83,7 @@ class Item extends React.Component {
 Item.propTypes = {
     id: propTypes.string.isRequired,
     deleteItem: propTypes.func.isRequired,
-    connectDragSource: propTypes.func.isRequired,
-    isDragging: propTypes.bool.isRequired
+    connectDragSource: propTypes.func.isRequired
 };
 
 export default DragSource(ItemTypes.ITEM, itemSource, collect)(Item);
