@@ -12,81 +12,63 @@ function findItemIndex(list, id) {
     });
 }
 
-/**
- * Crappy Reducer
- */
+function findParentList(lists, id) {
+    let listIndex = -1;
+    _.forEach(lists, (list, index) => {
+        let itemIndex = _.findIndex(list.items, (item) => {
+            return item.id == id
+        });
+
+        if (itemIndex != -1) {
+            listIndex = index;
+            return;
+        }
+    });
+
+    return listIndex;
+}
+
 const reducer = (state = {}, action) => {
-    let swapState = Object.assign({}, state),
-        listIndex = null,
-        itemIndex = null,
-        items = null,
-        list = null,
-        lists = null;
+    let swapState = {
+        ...state,
+        lists: state.lists.slice()
+
+    },
+        listIndex = findListIndex(swapState.lists, action.list),
+        itemIndex = null;
 
     switch(action.type) {
         case 'addItem':
-            //Wow such immutable very design
-            listIndex = findListIndex(swapState.lists, action.list);
-            lists = swapState.lists.slice();
-            list = Object.assign({}, lists[listIndex]);
-            items = list.items.slice();
-            items.push({id: action.item, description: ''});
-            list.items = items;
-            lists[listIndex] = list;
-            swapState.lists = lists;
+            swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
+            swapState.lists[listIndex].items.push({id: action.item, description: ''});
             return swapState;
 
         case 'deleteItem':
-            //Wow such immutable very design
-            listIndex = findListIndex(swapState.lists, action.list);
+            swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
             itemIndex = findItemIndex(swapState.lists[listIndex].items, action.item);
-            lists = swapState.lists.slice();
-            list = Object.assign({}, lists[listIndex]);
-            items = list.items.slice();
-            items.splice(itemIndex, 1);
-            list.items = items;
-            lists[listIndex] = list;
-            swapState.lists = lists;
+            swapState.lists[listIndex].items.splice(itemIndex, 1);
             return swapState;
 
         case 'editItem':
-            listIndex = findListIndex(swapState.lists, action.list);
+            swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
             itemIndex = findItemIndex(swapState.lists[listIndex].items, action.item);
-            lists = swapState.lists.slice();
-            list = Object.assign({}, lists[listIndex]);
-            items = list.items.slice();
-            let item = Object.assign({}, items[itemIndex]);
-            item.description = action.description;
-            items[itemIndex] = item;
-            list.items = items;
-            lists[listIndex] = list;
-            swapState.lists = lists;
+            swapState.lists[listIndex].items[itemIndex].description = action.description;
             return swapState;
 
         case 'addList':
-            lists = swapState.lists.slice();
-            lists.push({id: action.id, title: '', items: []});
-            swapState.lists = lists;
+            swapState.lists.push({id: action.id, title: '', items: []});
             return swapState;
 
         case 'deleteList':
-            listIndex = findListIndex(swapState.lists, action.id);
-            lists = swapState.lists.slice();
-            lists.splice(listIndex, 1);
-            swapState.lists = lists;
+            swapState.lists.splice(listIndex, 1);
             return swapState;
 
         case 'editList':
-            listIndex = findListIndex(swapState.lists, action.id);
-            lists = swapState.lists.slice();
-            list = Object.assign({}, lists[listIndex]);
-            list.title = action.title;
-            lists[listIndex] = list;
-            swapState.lists = lists;
+            swapState.lists[listIndex].title = action.title;
             return swapState;
 
         default:
-            return swapState;
+            return state;
     }
 };
 
