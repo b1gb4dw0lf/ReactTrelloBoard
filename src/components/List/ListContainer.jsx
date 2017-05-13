@@ -10,7 +10,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addItem: (listId, itemId) => (dispatch(ItemActions.addItem(listId, itemId))),
-        deleteItem: (listId, itemId) => (dispatch(ItemActions.deleteItem(listId, itemId)))
+        deleteItem: (listId, itemId) => (dispatch(ItemActions.deleteItem(listId, itemId))),
+        moveItem: (to, itemId) => (dispatch(ItemActions.moveItem(to, itemId)))
     }
 };
 

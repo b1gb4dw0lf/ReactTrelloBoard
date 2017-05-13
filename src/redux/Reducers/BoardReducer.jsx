@@ -55,6 +55,18 @@ const reducer = (state = {}, action) => {
             swapState.lists[listIndex].items[itemIndex].description = action.description;
             return swapState;
 
+        case 'moveItem':
+            swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
+            let parentListIndex = findParentList(swapState.lists, action.item);
+            swapState.lists[parentListIndex].items = swapState.lists[parentListIndex].items.slice();
+            itemIndex = findItemIndex(swapState.lists[parentListIndex], action.item);
+
+            //You saw nothing.
+            let item = swapState.lists[parentListIndex].items.splice(itemIndex, 1)[0];
+
+            swapState.lists[listIndex].items.push(item);
+            return swapState;
+
         case 'addList':
             swapState.lists.push({id: action.id, title: '', items: []});
             return swapState;

@@ -1,11 +1,10 @@
 import ActionTypes from '../Types/ActionTypes.jsx';
 
 export default {
-    moveItem: (from, to, itemId) => {
+    moveItem: (to, itemId) => {
         return {
             type: ActionTypes.MOVE_ITEM,
-            from: from,
-            to: to,
+            list: to,
             item: itemId
         };
     },

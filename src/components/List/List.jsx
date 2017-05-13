@@ -9,7 +9,8 @@ import Item from '../Item/Item.jsx';
 
 const listTarget = {
     drop(props, monitor) {
-        console.log(props.id);
+        let item = monitor.getItem();
+        props.moveItem(props.id, item.id)
     }
 };
 
@@ -43,7 +44,8 @@ class List extends React.Component {
         return connectDropTarget(
             <div className="list">
                 {this.getHeader()}
-                {this.props.items.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
+                {console.log(this.props.items)}
+                {this.props.items.map((obj) => <Item key={obj.id} id={obj.id} description={obj.description} deleteItem={this.handleDeleteItem}/>)}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
