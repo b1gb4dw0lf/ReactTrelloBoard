@@ -112,7 +112,6 @@ class List extends React.Component {
     handleAddItem () {
         let id = this.guid();
         this.props.addItem(this.props.id, id);
-        console.log(this.props.items);
     }
 
     handleDeleteItem(id) {

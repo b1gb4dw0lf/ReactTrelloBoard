@@ -20,10 +20,6 @@ function collect(connect, monitor) {
 
 class DraggableList extends  React.Component{
 
-    componentDidMount() {
-        console.log(this.props);
-    }
-
     render() {
         const {connectDragSource} = this.props;
         return connectDragSource(<div className="list-container">
