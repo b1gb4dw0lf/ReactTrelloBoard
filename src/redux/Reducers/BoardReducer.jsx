@@ -32,12 +32,15 @@ const reducer = (state = {}, action) => {
             swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
             let parentListIndex = Utils.findParentList(swapState.lists, action.item);
             swapState.lists[parentListIndex].items = swapState.lists[parentListIndex].items.slice();
-            itemIndex = Utils.findItemIndex(swapState.lists[parentListIndex], action.item);
+            itemIndex = Utils.findItemIndex(swapState.lists[parentListIndex].items, action.item);
+
+            let listDomObject = document.getElementsByClassName('list')[listIndex];
+            let dropIndex = Utils.calculateDropPosition(listDomObject, action.dropPos);
 
             //You saw nothing.
             let item = swapState.lists[parentListIndex].items.splice(itemIndex, 1)[0];
+            swapState.lists[listIndex].items.splice(dropIndex, 0, item);
 
-            swapState.lists[listIndex].items.push(item);
             return swapState;
 
         case 'addList':

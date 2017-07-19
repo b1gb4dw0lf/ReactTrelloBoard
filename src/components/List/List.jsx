@@ -10,7 +10,9 @@ import Item from '../Item/Item.jsx';
 const listTarget = {
     drop(props, monitor) {
         let item = monitor.getItem();
-        props.moveItem(props.id, item.id)
+        let dropOffset = Object.assign({}, monitor.getClientOffset());
+
+        props.moveItem(props.id, item.id, dropOffset);
     }
 };
 

@@ -30,6 +30,23 @@ class Utils {
 
         return listIndex;
     }
+
+    static calculateDropPosition(listDOMElement, dropPos) {
+        let itemsDomObjects = listDOMElement.getElementsByClassName('item');
+
+        let dropIndex = 0;
+
+        //Wow such insert to position, very coordinate calculation
+        for (let i = 0; i < itemsDomObjects.length; i++) {
+            let totalHeight = itemsDomObjects[i].offsetTop + itemsDomObjects[i].offsetHeight / 2;
+
+            if (totalHeight < dropPos.y) {
+                dropIndex = i + 1;
+            }
+        }
+
+        return dropIndex;
+    }
 }
 
 export default Utils;

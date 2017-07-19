@@ -1,11 +1,12 @@
 import ActionTypes from '../Types/ActionTypes.jsx';
 
 export default {
-    moveItem: (to, itemId) => {
+    moveItem: (to, itemId, dropPos) => {
         return {
             type: ActionTypes.MOVE_ITEM,
             list: to,
-            item: itemId
+            item: itemId,
+            dropPos: dropPos
         };
     },
     addItem: (listId, itemId) => {
