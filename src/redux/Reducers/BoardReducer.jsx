@@ -1,32 +1,5 @@
-import _ from 'lodash';
+import Utils from '../../Utils.jsx';
 
-function findListIndex(lists, id) {
-    return _.findIndex(lists, (list) => {
-        return list.id == id
-    });
-}
-
-function findItemIndex(list, id) {
-    return _.findIndex(list, (item) => {
-        return item.id == id
-    });
-}
-
-function findParentList(lists, id) {
-    let listIndex = -1;
-    _.forEach(lists, (list, index) => {
-        let itemIndex = _.findIndex(list.items, (item) => {
-            return item.id == id
-        });
-
-        if (itemIndex != -1) {
-            listIndex = index;
-            return;
-        }
-    });
-
-    return listIndex;
-}
 
 const reducer = (state = {}, action) => {
     let swapState = {
@@ -34,7 +7,7 @@ const reducer = (state = {}, action) => {
         lists: state.lists.slice()
 
     },
-        listIndex = findListIndex(swapState.lists, action.list),
+        listIndex = Utils.findListIndex(swapState.lists, action.list),
         itemIndex = null;
 
     switch(action.type) {
@@ -45,21 +18,21 @@ const reducer = (state = {}, action) => {
 
         case 'deleteItem':
             swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
-            itemIndex = findItemIndex(swapState.lists[listIndex].items, action.item);
+            itemIndex = Utils.findItemIndex(swapState.lists[listIndex].items, action.item);
             swapState.lists[listIndex].items.splice(itemIndex, 1);
             return swapState;
 
         case 'editItem':
             swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
-            itemIndex = findItemIndex(swapState.lists[listIndex].items, action.item);
+            itemIndex = Utils.findItemIndex(swapState.lists[listIndex].items, action.item);
             swapState.lists[listIndex].items[itemIndex].description = action.description;
             return swapState;
 
         case 'moveItem':
             swapState.lists[listIndex].items = swapState.lists[listIndex].items.slice();
-            let parentListIndex = findParentList(swapState.lists, action.item);
+            let parentListIndex = Utils.findParentList(swapState.lists, action.item);
             swapState.lists[parentListIndex].items = swapState.lists[parentListIndex].items.slice();
-            itemIndex = findItemIndex(swapState.lists[parentListIndex], action.item);
+            itemIndex = Utils.findItemIndex(swapState.lists[parentListIndex], action.item);
 
             //You saw nothing.
             let item = swapState.lists[parentListIndex].items.splice(itemIndex, 1)[0];
