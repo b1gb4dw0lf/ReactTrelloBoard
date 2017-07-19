@@ -1,18 +1,17 @@
 import React from 'react';
 import _ from 'lodash';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import propTypes from 'prop-types';
 
 import './Board.less';
 
-import List from '../List/List.jsx';
+import List from '../DraggableList/DraggableList.jsx';
 
 class Board extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-          lists: []
-        };
 
         this.handleAddList = this.handleAddList.bind(this);
         this.handleDeleteList = this.handleDeleteList.bind(this);
@@ -21,7 +20,7 @@ class Board extends React.Component {
     render() {
         return (
             <div className="board">
-                {this.state.lists.map((id) => <List key={id} id={id} deleteList={this.handleDeleteList}/>)}
+                {this.props.lists.map((obj) => (<List key={obj.id} id={obj.id} items={obj.items} deleteList={this.handleDeleteList}/>))}
                 <div className="board-dialogue" onClick={this.handleAddList}>
                     Add list
                 </div>
@@ -31,16 +30,11 @@ class Board extends React.Component {
 
     handleAddList() {
         let id = this.guid();
-        let lists = this.state.lists.slice();
-        lists.push(id);
-        this.setState({lists: lists});
+        this.props.addList(id);
     }
 
     handleDeleteList(id) {
-        let index = _.findIndex(this.state.lists, (list) =>  list == id);
-        let lists = this.state.lists.slice();
-        lists.splice(index, 1);
-        this.setState({lists: lists});
+        this.props.deleteList(id);
     }
 
     /**
@@ -59,4 +53,4 @@ class Board extends React.Component {
     }
 }
 
-export default Board;
+export default DragDropContext(HTML5Backend)(Board);

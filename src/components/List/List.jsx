@@ -1,9 +1,26 @@
 import React from 'react';
-import _ from 'lodash';
+import propTypes from 'prop-types';
+import ItemTypes from '../DraggableTypes/DraggableTypes.jsx';
+import { DropTarget } from 'react-dnd'
 
 import './List.less';
 
 import Item from '../Item/Item.jsx';
+
+const listTarget = {
+    drop(props, monitor) {
+        let item = monitor.getItem();
+        let dropOffset = Object.assign({}, monitor.getClientOffset());
+
+        props.moveItem(props.id, item.id, dropOffset);
+    }
+};
+
+function collect(connect, monitor) {
+    return {
+        connectDropTarget: connect.dropTarget()
+    };
+}
 
 class List extends React.Component {
 
@@ -12,6 +29,7 @@ class List extends React.Component {
 
         this.handleAddItem = this.handleAddItem.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.handleEditItem = this.handleEditItem.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleTitleInput = this.handleTitleInput.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
@@ -20,16 +38,19 @@ class List extends React.Component {
         this.state = {
             title: '',
             isEditing: false,
-            editText: '',
-            children: []
+            editText: ''
         };
     }
 
     render () {
-        return (
+        const {connectDropTarget} = this.props;
+        return connectDropTarget(
             <div className="list">
                 {this.getHeader()}
-                {this.state.children.map((id) => <Item key={id} id={id} deleteItem={this.handleDeleteItem}/>)}
+                {this.props.items.map((obj) => (<Item key={obj.id} id={obj.id}
+                                                      description={obj.description}
+                                                      deleteItem={this.handleDeleteItem}
+                                                      editItem={this.handleEditItem} />))}
                 <div className="dialogue">
                     <div className="add-button" onClick={this.handleAddItem}>Add item</div>
                 </div>
@@ -48,7 +69,9 @@ class List extends React.Component {
                 </div>
             </div>)
         } else {
-            return <input autoFocus="true" className="list-title" onChange={this.handleTitleInput} onKeyDown={this.handleKeyDown} value={this.state.editText} />
+            return (<div>
+                <input autoFocus="true" className="list-title" onChange={this.handleTitleInput} onKeyDown={this.handleKeyDown} value={this.state.editText} />
+            </div>);
         }
     }
 
@@ -79,9 +102,9 @@ class List extends React.Component {
         }
     }
 
-    handleSelfDelete(id) {
-        if (this.state.children.length == 0)
-            this.props.deleteList(id);
+    handleSelfDelete() {
+        if (this.props.items.length == 0)
+            this.props.deleteList(this.props.id);
     }
 
     handleTitleInput(event) {
@@ -90,16 +113,15 @@ class List extends React.Component {
 
     handleAddItem () {
         let id = this.guid();
-        let children = this.state.children.slice();
-        children.push(id);
-        this.setState({children: children});
+        this.props.addItem(this.props.id, id);
     }
 
     handleDeleteItem(id) {
-        let children = this.state.children.slice();
-        let index = _.findIndex(children, (child) => child == id);
-        children.splice(index, 1);
-        this.setState({children: children});
+        this.props.deleteItem(this.props.id, id);
+    }
+
+    handleEditItem(id, description) {
+        this.props.editItem(this.props.id, id, description);
     }
 
     /**
@@ -118,4 +140,11 @@ class List extends React.Component {
     }
 }
 
-export default List;
+List.propTypes = {
+    id: propTypes.string.isRequired,
+    deleteList: propTypes.func.isRequired,
+    addItem: propTypes.func.isRequired,
+    deleteItem: propTypes.func.isRequired
+};
+
+export default DropTarget(ItemTypes.ITEM, listTarget, collect)(List);
