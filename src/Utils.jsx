@@ -5,13 +5,13 @@ class Utils {
 
     static findListIndex(lists, id) {
         return _.findIndex(lists, (list) => {
-            return list.id == id
+            return list.id === id
         });
     }
 
     static findItemIndex(list, id) {
         return _.findIndex(list, (item) => {
-            return item.id == id
+            return item.id === id
         });
     }
 
@@ -19,7 +19,7 @@ class Utils {
         let listIndex = -1;
         _.forEach(lists, (list, index) => {
             let itemIndex = _.findIndex(list.items, (item) => {
-                return item.id == id
+                return item.id === id
             });
 
             if (itemIndex != -1) {
